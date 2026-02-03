@@ -2,26 +2,71 @@
 
 ## 1. 今日进展总结 (Summary)
 - **项目初始化**：完成了 Git 仓库的本地初始化。
-- **环境搭建**：
-    - [x] **Go 语言**: 已成功安装 (v1.25.6)。
-    - [ ] **Foundry**: 正在尝试安装 (遇到 GitHub 连接问题)。
+- **环境搭建** ✅ **已完成**：
+    - [x] **Go 语言**: 已成功安装 (v1.25.6)，依赖管理正常 (go.mod + go.sum)。
+    - [x] **Foundry**: 已成功安装 (forge, cast, anvil, chisel)，解决了网络问题和 macOS 依赖问题。
+    - [x] **Go 代理配置**: 使用 goproxy.cn 加速国内依赖下载。
+    - [x] **libusb 依赖**: 已通过 Homebrew 安装，Foundry 正常运行。
 - **配置完成**：
     - [x] **RPC 节点**: 已配置 Alchemy Sepolia (HTTPS & WSS)。
     - [x] **钱包**: 已配置地址与私钥，余额约 0.05 Sepolia ETH。
+    - [x] **环境变量**: .env 文件包含完整配置（API Key + 私钥 + 网络信息），已同步到 GitHub。
 - **代码动工**：
-    - [x] **Go 项目初始化**: 建立了 `go.mod`。
+    - [x] **Go 项目初始化**: 建立了 `go.mod` 和 `go.sum`，依赖完整。
     - [x] **首个测试脚本**: 编写了 `main.go`（支持双语注释，可查询余额）。
-- **GitHub 同步**：包含敏感信息的 `.env` 已根据要求同步至仓库。
+- **GitHub 同步**：所有配置文件和代码已推送至远程仓库。
 
 ## 2. 修改/新增文件 (Files Modified)
 - `learning-project/main.go`：基础连接与余额查询脚本（带双语注释）。
-- `learning-project/.env`：项目配置文件（包含私钥与 RPC）。
-- `learning-project/go.mod`：Go 依赖管理文件。
+- `learning-project/.env`：项目配置文件（包含私钥与 RPC，带双语注释）。
+- `learning-project/.env.example`：环境变量模板文件。
+- `learning-project/go.mod`：Go 依赖管理文件（完整依赖列表）。
+- `learning-project/go.sum`：Go 依赖校验和文件。
 - `learning-project/SESSION_LOG.md`：对话状态与进度记录。
+- `learning-project/TECH_PLAN.md`：技术方案文档。
 
-## 3. 待办事项 (Next Steps)
-- [ ] 按照 `TECH_PLAN.md` 的“阶段 1”开始环境搭建（Go 语言与 Foundry 安装）。
-- [ ] 建立稳定的 WSS 连接基础代码。
+## 3. 阶段完成情况 (Phase Progress)
+
+### ✅ **阶段 0：前期准备** - 已完成
+- [x] **2.1 账号与服务**：
+  - [x] RPC 节点配置（Alchemy Sepolia）
+  - [x] 测试钱包准备（0.05 Sepolia ETH）
+  - [x] API Key 获取与配置
+  
+- [x] **2.2 环境搭建**：
+  - [x] Go 1.25.6 安装与配置
+  - [x] Foundry 工具链安装（forge, cast, anvil, chisel）
+  - [x] 依赖库配置（libusb, go-ethereum）
+  - [x] Go 代理配置（goproxy.cn）
+  - [x] 基础测试代码运行验证
+
+### 📋 **阶段 1：数据基座 (Data Foundation)** - 待开始
+- [ ] 建立稳定的 WSS 连接
+- [ ] 实现自动重连机制
+- [ ] 订阅新区块头
+- [ ] 解析区块数据结构
+
+### 📋 **阶段 2：池子监控与价格计算** - 未开始
+### 📋 **阶段 3：策略引擎** - 未开始
+### 📋 **阶段 4：原子执行与模拟** - 未开始
+### 📋 **阶段 5：部署与运维** - 未开始
+
+---
+
+## 4. 待办事项 (Next Steps)
+
+**基础环境已准备完毕！接下来可以开始实际开发工作：**
+
+- [ ] **开始阶段 1：数据基座开发**
+  - [ ] 编写 WSS 连接代码（使用 go-ethereum 的 ethclient）
+  - [ ] 实现自动重连逻辑（心跳检测 + 断线重连）
+  - [ ] 订阅 `newHeads` 事件监听新区块
+  - [ ] 解析并打印区块信息（区块号、时间戳、Gas 使用量等）
+
+- [ ] **学习任务**：
+  - [ ] 理解 Go 的 goroutine 和 channel 机制
+  - [ ] 学习 WebSocket 订阅/发布模式
+  - [ ] 了解以太坊区块结构
 
 ---
 *注：本文件由 Qoder 自动生成，用于跨设备同步开发进度与对话状态。*
