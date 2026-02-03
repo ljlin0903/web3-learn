@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # Block Monitor Service / 区块监听服务
+  monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web3-monitor
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - web3-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  web3-network:
+    driver: bridge

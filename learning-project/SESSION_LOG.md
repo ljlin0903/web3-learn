@@ -25,6 +25,9 @@
 - `learning-project/arbitrage_finder.go`：三角套利路径搜索器（多池子组合分析）。
 - `learning-project/contracts/src/FlashArbitrage.sol`：三角套利智能合约（Solidity）。
 - `learning-project/contracts/test/FlashArbitrage.t.sol`：合约测试套件（Foundry）。
+- `learning-project/Dockerfile`：Docker 镜像构建文件（多阶段构建）。
+- `learning-project/docker-compose.yml`：Docker Compose 配置文件。
+- `learning-project/deploy.sh`：自动化部署脚本（阿里云）。
 - `learning-project/.env`：项目配置文件（包含私钥与 RPC，带双语注释）。
 - `learning-project/.env.example`：环境变量模板文件。
 - `learning-project/go.mod`：Go 依赖管理文件（完整依赖列表）。
@@ -69,7 +72,11 @@
 - [x] 合约测试（Foundry Test）
 - [x] Mock 测试环境（模拟 DEX + Token）
 - [x] 利润验证（4.05% 利润率）
-### 📋 **阶段 5：部署与运维** - 未开始
+### ✅ **阶段 5：部署与运维** - 已完成
+- [x] Docker 容器化（多阶段构建）
+- [x] Docker Compose 配置
+- [x] 自动化部署脚本（阿里云）
+- [x] 日志管理配置
 
 ---
 
@@ -102,11 +109,43 @@
   - [x] 编写完整测试套件（Mock Router + Token）
   - [x] Foundry 测试验证（所有测试通过，4.05% 利润）
 
-- [ ] **阶段 5：部署与运维** - 待开始
-  - [ ] 合约部署到测试网
-  - [ ] Go Bot 集成合约调用
-  - [ ] 监控与告警系统
-  - [ ] Docker 容器化
+- [x] **阶段 5：部署与运维** - 已完成
+  - [x] Docker 容器化（Alpine Linux + 多阶段构建）
+  - [x] Docker Compose 编排配置
+  - [x] 自动化部署脚本（SSH + rsync）
+  - [x] 日志轮转配置（10MB × 3）
+
+---
+
+## 5. 部署指南 (Deployment Guide)
+
+### 部署步骤：
+
+1. **修改配置**
+   ```bash
+   vim deploy.sh
+   # 修改 SERVER_IP 为你的阺里云服务器 IP
+   ```
+
+2. **执行部署**
+   ```bash
+   ./deploy.sh
+   ```
+
+3. **查看日志**
+   ```bash
+   ssh root@YOUR_SERVER_IP 'cd /opt/web3-quant && docker-compose logs -f'
+   ```
+
+4. **查看状态**
+   ```bash
+   ssh root@YOUR_SERVER_IP 'cd /opt/web3-quant && docker-compose ps'
+   ```
+
+5. **停止服务**
+   ```bash
+   ssh root@YOUR_SERVER_IP 'cd /opt/web3-quant && docker-compose down'
+   ```
 
 ---
 *注：本文件由 Qoder 自动生成，用于跨设备同步开发进度与对话状态。*
