@@ -55,17 +55,17 @@ web3-quant/
 
 ## 🗂️ 当前文件分类与作用
 
-### **1. Go 源文件（需重构）**
+### **1. Go 源文件（✅ 已重构完成）**
 
-| 当前位置 | 作用 | 建议迁移位置 |
-|---------|------|------------|
-| `main.go` | 基础测试：连接 RPC，查询余额 | 保持根目录（作为快速测试） |
-| `monitor.go` | 简单区块监听器 | → `pkg/blockchain/monitor_simple.go` |
-| `monitor_reconnect.go` | 带重连的区块监听器 | → `cmd/monitor/main.go` |
-| `pool_monitor.go` | Uniswap 池子监听 | → `pkg/dex/pool.go` |
-| `amm_calculator.go` | AMM 价格计算 | → `pkg/dex/amm.go` |
-| `arbitrage_finder.go` | 三角套利路径搜索 | → `pkg/strategy/arbitrage.go` |
-| `flashloan_monitor.go` | 闪电贷套利监控器 | → `cmd/arbitrage/main.go` |
+| 原位置 | 作用 | 当前位置 |
+|---------|------|----------|
+| `main.go` | 基础测试：连接 RPC，查询余额 | ✅ `main.go`（根目录保留） |
+| `monitor.go` | 简单区块监听器 | ✅ `pkg/blockchain/monitor_simple.go` |
+| `monitor_reconnect.go` | 带重连的区块监听器 | ✅ `cmd/monitor/main.go` |
+| `pool_monitor.go` | Uniswap 池子监听 | ✅ `pkg/dex/pool.go` |
+| `amm_calculator.go` | AMM 价格计算 | ✅ `pkg/dex/amm.go` |
+| `arbitrage_finder.go` | 三角套利路径搜索 | ✅ `pkg/strategy/arbitrage.go` |
+| `flashloan_monitor.go` | 闪电贷套利监控器 | ✅ `cmd/arbitrage/main.go` |
 
 ### **2. Solidity 合约（已规范）**
 
@@ -75,15 +75,15 @@ web3-quant/
 | `contracts/src/FlashLoanArbitrage.sol` | 闪电贷套利合约（无需资金） | ✅ 完成 |
 | `contracts/test/*.t.sol` | Foundry 测试套件 | ✅ 完成 |
 
-### **3. 部署文件**
+### **3. 部署文件（✅ 已整理）**
 
-| 文件 | 作用 | 状态 |
-|-----|------|------|
-| `Dockerfile` | Docker 镜像构建（多阶段构建） | ✅ 完成 |
-| `docker-compose.yml` | 服务编排配置 | ✅ 完成 |
-| `deploy.sh` | SSH 部署脚本（需 sshpass） | ✅ 完成 |
-| `deploy_expect.sh` | Expect 部署脚本（密码认证） | ✅ 完成 |
-| `daemon.json` | Docker 镜像加速配置 | ✅ 完成 |
+| 文件 | 作用 | 当前位置 |
+|-----|------|----------|
+| `Dockerfile` | Docker 镜像构建（多阶段构建） | ✅ 根目录 |
+| `docker-compose.yml` | 服务编排配置 | ✅ 根目录 |
+| `deploy.sh` | SSH 部署脚本（需 sshpass） | ✅ `scripts/deploy.sh` |
+| `deploy_expect.sh` | Expect 部署脚本（密码认证） | ✅ `scripts/deploy_expect.sh` |
+| `daemon.json` | Docker 镜像加速配置 | ✅ `scripts/daemon.json` |
 
 ### **4. 配置文件**
 
