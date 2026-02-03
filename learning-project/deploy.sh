@@ -10,8 +10,13 @@ echo "========================================="
 
 # Variables / 变量
 SERVER_USER="root"  # 修改为你的服务器用户名
-SERVER_IP=""        # 【请填写】修改为你的阿里云服务器 IP
+SERVER_IP="47.93.253.224"        # 阿里云服务器公网 IP
+SERVER_PASS="Root159647"  # 服务器密码
 DEPLOY_PATH="/opt/web3-quant"
+
+# SSH command with password / 带密码的 SSH 命令
+SSH_CMD="sshpass -p '$SERVER_PASS' ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
+RSYNC_CMD="sshpass -p '$SERVER_PASS' rsync -avz --progress -e 'ssh -o StrictHostKeyChecking=no'"
 
 # Check if server IP is set / 检查服务器 IP 是否设置
 if [ -z "$SERVER_IP" ]; then
@@ -27,7 +32,7 @@ echo ""
 # Step 1: Install Docker on server (if not installed)
 # 步骤1：在服务器上安装 Docker（如果未安装）
 echo "📦 步骤 1/5: 检查 Docker 安装..."
-ssh $SERVER_USER@$SERVER_IP << 'ENDSSH'
+$SSH_CMD << 'ENDSSH'
 if ! command -v docker &> /dev/null; then
     echo "   正在安装 Docker..."
     curl -fsSL https://get.docker.com | sh
@@ -52,14 +57,14 @@ ENDSSH
 # 步骤2：创建部署目录
 echo ""
 echo "📁 步骤 2/5: 创建部署目录..."
-ssh $SERVER_USER@$SERVER_IP "mkdir -p $DEPLOY_PATH"
+$SSH_CMD "mkdir -p $DEPLOY_PATH"
 echo "   ✓ 目录创建完成"
 
 # Step 3: Upload files to server
 # 步骤3：上传文件到服务器
 echo ""
 echo "📤 步骤 3/5: 上传文件到服务器..."
-rsync -avz --progress \
+$RSYNC_CMD \
     --exclude 'contracts/' \
     --exclude '.git/' \
     --exclude 'test_program' \
@@ -71,7 +76,7 @@ echo "   ✓ 文件上传完成"
 # 步骤4：构建并启动 Docker 容器
 echo ""
 echo "🔨 步骤 4/5: 构建 Docker 镜像..."
-ssh $SERVER_USER@$SERVER_IP << ENDSSH
+$SSH_CMD << ENDSSH
 cd $DEPLOY_PATH
 docker-compose down 2>/dev/null || true
 docker-compose build
@@ -82,7 +87,7 @@ ENDSSH
 # 步骤5：启动服务
 echo ""
 echo "🚀 步骤 5/5: 启动服务..."
-ssh $SERVER_USER@$SERVER_IP << ENDSSH
+$SSH_CMD << ENDSSH
 cd $DEPLOY_PATH
 docker-compose up -d
 echo "   ✓ 服务启动完成"
@@ -94,11 +99,11 @@ echo "✅ 部署成功！"
 echo "========================================="
 echo ""
 echo "📊 查看日志："
-echo "   ssh $SERVER_USER@$SERVER_IP 'cd $DEPLOY_PATH && docker-compose logs -f'"
+echo "   $SSH_CMD 'cd $DEPLOY_PATH && docker-compose logs -f'"
 echo ""
 echo "🔍 查看状态："
-echo "   ssh $SERVER_USER@$SERVER_IP 'cd $DEPLOY_PATH && docker-compose ps'"
+echo "   $SSH_CMD 'cd $DEPLOY_PATH && docker-compose ps'"
 echo ""
 echo "🛑 停止服务："
-echo "   ssh $SERVER_USER@$SERVER_IP 'cd $DEPLOY_PATH && docker-compose down'"
+echo "   $SSH_CMD 'cd $DEPLOY_PATH && docker-compose down'"
 echo ""
