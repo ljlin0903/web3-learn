@@ -1,0 +1,13 @@
+
+# 编译产物
+test_program
+flashloan_monitor
+cmd/*/main
+pkg/*/bin
+
+# Foundry 编译输出
+contracts/cache/
+contracts/out/
+
+# macOS
+.DS_Store
