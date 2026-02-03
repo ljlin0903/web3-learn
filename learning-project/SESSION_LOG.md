@@ -22,6 +22,7 @@
 - `learning-project/monitor_reconnect.go`：带自动重连的区块监听器（心跳检测 + 指数退避）。
 - `learning-project/pool_monitor.go`：Uniswap V2 池子监听器（监听 Swap 事件）。
 - `learning-project/amm_calculator.go`：AMM 价格计算器（Uniswap V2 数学模型）。
+- `learning-project/arbitrage_finder.go`：三角套利路径搜索器（多池子组合分析）。
 - `learning-project/.env`：项目配置文件（包含私钥与 RPC，带双语注释）。
 - `learning-project/.env.example`：环境变量模板文件。
 - `learning-project/go.mod`：Go 依赖管理文件（完整依赖列表）。
@@ -56,7 +57,11 @@
 - [x] 实现 AMM 数学模型计算（getAmountOut, getAmountIn）
 - [x] 大数运算处理（math/big）
 - [x] 价格影响计算
-### 📋 **阶段 3：策略引擎** - 未开始
+### ✅ **阶段 3：策略引擎** - 已完成
+- [x] 实现三角套利路径搜索（多池子组合）
+- [x] 盈利预估与计算
+- [x] 套利机会排序与筛选
+- [x] 利润率分析
 ### 📋 **阶段 4：原子执行与模拟** - 未开始
 ### 📋 **阶段 5：部署与运维** - 未开始
 
@@ -79,11 +84,17 @@
   - [x] 大数运算处理（math/big.Int, math/big.Float）
   - [x] 价格影响计算与交易模拟
 
-- [ ] **阶段 3：策略引擎** - 待开始
-  - [ ] 实现环路套利路径搜索（多池子组合）
-  - [ ] Bellman-Ford 算法优化
-  - [ ] 盈利预估与滑点计算
-  - [ ] Gas 成本估算
+- [x] **阶段 3：策略引擎** - 已完成
+  - [x] 实现三角套利路径搜索（多池子组合分析）
+  - [x] 盈利预估与计算（含手续费）
+  - [x] 套利机会排序与筛选
+  - [x] 利润率分析与显示
+
+- [ ] **阶段 4：原子执行与模拟** - 待开始
+  - [ ] 编写 Solidity 套利合约（原子执行）
+  - [ ] Yul 优化（Gas 优化）
+  - [ ] 本地模拟器集成（revm/anvil）
+  - [ ] Flashbots Bundle 发送
 
 ---
 *注：本文件由 Qoder 自动生成，用于跨设备同步开发进度与对话状态。*
