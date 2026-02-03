@@ -114,10 +114,88 @@
   - [x] Docker Compose 编排配置
   - [x] 自动化部署脚本（SSH + rsync）
   - [x] 日志轮转配置（10MB × 3）
+  - [x] 阿里云服务器部署成功
+
+- [x] **阶段 6：闪电贷集成** - 已完成
+  - [x] FlashLoanArbitrage.sol 合约开发
+  - [x] Aave V3 闪电贷接口集成
+  - [x] 原子化三角套利实现
+  - [x] 完整测试套件（5个测试全部通过）
+  - [x] 链下套利机会模拟
+  - [x] Go 语言监控模块（flashloan_monitor.go）
 
 ---
 
-## 5. 部署指南 (Deployment Guide)
+## 5. 闪电贷套利指南 (Flash Loan Arbitrage Guide)
+
+### 核心优势
+
+1. **无需启动资金**: 使用 Aave 闪电贷，借入大额资金进行套利
+2. **零风险交易**: 
+   - 不盈利则自动回滚，**不消耗 Gas**
+   - 所有操作在单笔事务中原子执行
+3. **链下模拟**: 提前验证盈利性，避免无效交易
+
+### 测试结果
+
+```
+借入金额: 100 TKA
+手续费: 0.09 TKA (0.09%)
+利润: 19.91 TKA (19.91%)
+
+Gas 消耗: ~271,730 gas
+测试通过率: 100% (5/5)
+```
+
+### 使用流程
+
+1. **部署合约**
+   ```bash
+   cd contracts
+   forge create --rpc-url $RPC_URL \
+     --private-key $PRIVATE_KEY \
+     src/FlashLoanArbitrage.sol:FlashLoanArbitrage \
+     --constructor-args <AAVE_POOL_ADDRESSES_PROVIDER>
+   ```
+
+2. **配置监控器**
+   ```bash
+   # 设置环境变量
+   export FLASHLOAN_CONTRACT_ADDRESS=<合约地址>
+   export PRIVATE_KEY=<私钥>
+   
+   # 启动监控器
+   go run flashloan_monitor.go
+   ```
+
+3. **查看实时日志**
+   ```
+   🚀 Flash loan arbitrage monitor started
+      Contract: 0x...
+      Min Profit: 100 bps (1.00%)
+      Check Interval: 5000 ms
+   
+   💰 OPPORTUNITY FOUND!
+      Token: 0xC02a...
+      Loan Amount: 10.000000 ETH
+      Expected Profit: 0.200000 ETH (2.00%)
+      Path: 0xC02a... -> 0xA0b8... -> 0x6B17... -> 0xC02a...
+   
+   ✅ Arbitrage executed successfully!
+   ```
+
+### 主网部署注意事项
+
+⚠️ **重要：主网部署前必读**
+
+1. **Gas 费用**: 每次执行需要 0.005-0.01 ETH 的 Gas
+2. **竞争环境**: MEV 机器人激烈竞争，需要优化速度
+3. **Flashbots**: 建议使用 Flashbots 防止被前置攻击
+4. **风险管理**: 设置合理的最低利润率阈值
+
+---
+
+## 6. 部署指南 (Deployment Guide)
 
 ### 部署步骤：
 
