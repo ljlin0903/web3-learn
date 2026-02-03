@@ -20,6 +20,8 @@
 - `learning-project/main.go`：基础连接与余额查询脚本（带详细日志输出）。
 - `learning-project/monitor.go`：WebSocket 区块监听器（实时监听新区块）。
 - `learning-project/monitor_reconnect.go`：带自动重连的区块监听器（心跳检测 + 指数退避）。
+- `learning-project/pool_monitor.go`：Uniswap V2 池子监听器（监听 Swap 事件）。
+- `learning-project/amm_calculator.go`：AMM 价格计算器（Uniswap V2 数学模型）。
 - `learning-project/.env`：项目配置文件（包含私钥与 RPC，带双语注释）。
 - `learning-project/.env.example`：环境变量模板文件。
 - `learning-project/go.mod`：Go 依赖管理文件（完整依赖列表）。
@@ -48,7 +50,12 @@
 - [x] 订阅新区块头
 - [x] 解析区块数据结构（区块号、时间戳、Gas、难度等）
 
-### 📋 **阶段 2：池子监控与价格计算** - 未开始
+### ✅ **阶段 2：池子监控与价格计算** - 已完成
+- [x] 监听 Uniswap V2 池子事件（Swap 事件订阅）
+- [x] 解析 Swap 事件获取价格变动
+- [x] 实现 AMM 数学模型计算（getAmountOut, getAmountIn）
+- [x] 大数运算处理（math/big）
+- [x] 价格影响计算
 ### 📋 **阶段 3：策略引擎** - 未开始
 ### 📋 **阶段 4：原子执行与模拟** - 未开始
 ### 📋 **阶段 5：部署与运维** - 未开始
@@ -65,11 +72,18 @@
   - [x] 订阅 `newHeads` 事件监听新区块
   - [x] 解析并打印区块信息（区块号、时间戳、Hash、Gas 等）
 
-- [ ] **阶段 2：池子监控与价格计算** - 待开始
-  - [ ] 监听 Uniswap V2/V3 池子事件
-  - [ ] 解析 Swap 事件获取价格变动
-  - [ ] 实现 AMM 数学模型计算
-  - [ ] 大数运算处理（math/big）
+- [x] **阶段 2：池子监控与价格计算** - 已完成
+  - [x] 监听 Uniswap V2 池子事件（Swap 事件 ABI 解析）
+  - [x] 解析 Swap 事件获取价格变动
+  - [x] 实现 AMM 数学模型计算（Uniswap V2 公式）
+  - [x] 大数运算处理（math/big.Int, math/big.Float）
+  - [x] 价格影响计算与交易模拟
+
+- [ ] **阶段 3：策略引擎** - 待开始
+  - [ ] 实现环路套利路径搜索（多池子组合）
+  - [ ] Bellman-Ford 算法优化
+  - [ ] 盈利预估与滑点计算
+  - [ ] Gas 成本估算
 
 ---
 *注：本文件由 Qoder 自动生成，用于跨设备同步开发进度与对话状态。*
