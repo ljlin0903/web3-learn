@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  mev-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mev-arbitrage-bot
+    restart: unless-stopped
+    
+    # 环境变量 (从 .env 文件读取)
+    env_file:
+      - .env
+    
+    # 或者直接在这里配置环境变量
+    # environment:
+    #   - NETWORK=sepolia
+    #   - RPC_HTTPS_URL=https://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY
+    #   - RPC_WSS_URL=wss://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY
+    #   - PRIVATE_KEY=0x...
+    #   - PUBLIC_ADDRESS=0x...
+    #   - DRY_RUN=true
+    #   - LOG_LEVEL=info
+    
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # 资源限制 (可选)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    
+    # 挂载卷 (持久化日志等)
+    volumes:
+      - ./logs:/app/logs
+    
+    # 网络配置
+    networks:
+      - mev-network
+
+# 网络定义
+networks:
+  mev-network:
+    driver: bridge

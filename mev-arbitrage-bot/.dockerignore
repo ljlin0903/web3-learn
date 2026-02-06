@@ -1,0 +1,45 @@
+# Git
+.git
+.gitignore
+
+# 文档
+*.md
+docs/
+
+# 测试
+tests/
+*.test
+
+# 构建产物
+bin/
+dist/
+build/
+
+# 依赖
+vendor/
+
+# 环境文件 (在运行时挂载)
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+logs/
+
+# 临时文件
+tmp/
+temp/
+
+# 合约产物
+contracts/out/
+contracts/cache/
+contracts/broadcast/

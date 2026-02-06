@@ -1,0 +1,52 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+build/
+
+# Test binary
+*.test
+
+# Output
+*.out
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies
+vendor/
+
+# Build artifacts
+*.sum
+
+# Temporary files
+tmp/
+temp/
+
+# Contract artifacts
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+
+# Private keys (just in case)
+*.key
+*.pem
+keystore/
