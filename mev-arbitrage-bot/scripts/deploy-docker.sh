@@ -108,15 +108,15 @@ fi
 
 # 停止旧容器
 echo "停止旧容器..."
-docker-compose down 2>/dev/null || true
+docker-compose -f docker/docker-compose.yml down 2>/dev/null || true
 
 # 构建镜像
 echo "构建 Docker 镜像..."
-docker-compose build --no-cache
+docker-compose -f docker/docker-compose.yml build --no-cache
 
 # 启动容器
 echo "启动容器..."
-docker-compose up -d
+docker-compose -f docker/docker-compose.yml up -d
 
 echo "✓ 容器已启动"
 EOF
@@ -135,12 +135,12 @@ sleep 3
 echo ""
 echo "========================================"
 echo "容器状态:"
-docker-compose ps
+docker-compose -f docker/docker-compose.yml ps
 
 echo ""
 echo "========================================"
 echo "最近日志:"
-docker-compose logs --tail=20
+docker-compose -f docker/docker-compose.yml logs --tail=20
 
 echo ""
 echo "========================================"
@@ -155,8 +155,8 @@ echo -e "${GREEN}✅ 部署完成！${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""
 echo -e "${YELLOW}管理命令:${NC}"
-echo -e "  查看日志: ${GREEN}ssh root@${SERVER_IP} 'cd ${DEPLOY_DIR} && docker-compose logs -f'${NC}"
-echo -e "  停止服务: ${GREEN}ssh root@${SERVER_IP} 'cd ${DEPLOY_DIR} && docker-compose down'${NC}"
-echo -e "  重启服务: ${GREEN}ssh root@${SERVER_IP} 'cd ${DEPLOY_DIR} && docker-compose restart'${NC}"
-echo -e "  查看状态: ${GREEN}ssh root@${SERVER_IP} 'cd ${DEPLOY_DIR} && docker-compose ps'${NC}"
+echo -e "  查看日志: ${GREEN}ssh root@${SERVER_IP} 'cd ${DEPLOY_DIR} && docker-compose -f docker/docker-compose.yml logs -f'${NC}"
+echo -e "  停止服务: ${GREEN}ssh root@${SERVER_IP} 'cd ${DEPLOY_DIR} && docker-compose -f docker/docker-compose.yml down'${NC}"
+echo -e "  重启服务: ${GREEN}ssh root@${SERVER_IP} 'cd ${DEPLOY_DIR} && docker-compose -f docker/docker-compose.yml restart'${NC}"
+echo -e "  查看状态: ${GREEN}ssh root@${SERVER_IP} 'cd ${DEPLOY_DIR} && docker-compose -f docker/docker-compose.yml ps'${NC}"
 echo ""

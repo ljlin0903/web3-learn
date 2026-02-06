@@ -28,55 +28,55 @@ const (
 func main() {
 	printBanner()
 
-	// Load configuration
-	log.Info("Loading configuration...")
+	// 加载配置
+	log.Info("📋 正在加载配置...")
 	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Fatalf("Failed to load configuration: %v", err)
+		log.Fatalf("❌ 配置加载失败: %v", err)
 	}
 
 	cfg.PrintConfig()
 
-	// Initialize blockchain client
-	log.Info("Initializing blockchain client...")
+	// 初始化区块链客户端
+	log.Info("🔗 正在初始化区块链连接...")
 	client, err := blockchain.NewClient(cfg)
 	if err != nil {
-		log.Fatalf("Failed to initialize blockchain client: %v", err)
+		log.Fatalf("❌ 区块链客户端初始化失败: %v", err)
 	}
 	defer client.Close()
 
-	// Verify connection
-	log.Info("Verifying blockchain connection...")
+	// 验证连接
+	log.Info("🔍 正在验证区块链连接...")
 	if err := verifyConnection(client, cfg); err != nil {
-		log.Fatalf("Connection verification failed: %v", err)
+		log.Fatalf("❌ 连接验证失败: %v", err)
 	}
 
-	log.Info("✅ All systems operational!")
+	log.Info("✅ 所有系统就绪！")
 
 	if cfg.DryRun {
-		log.Warn("🧪 Running in DRY RUN mode - No real transactions will be sent")
+		log.Warn("🧪 当前运行模式: 模拟模式 - 不会发送真实交易")
 	} else {
-		log.Warn("⚠️  Running in LIVE mode - Real transactions will be sent!")
+		log.Warn("⚠️  当前运行模式: 真实模式 - 将发送真实交易！")
 	}
 
-	// Setup graceful shutdown
+	// 设置优雅关闭
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
-	// Initialize modules
-	log.Info("Initializing arbitrage modules...")
+	// 初始化模块
+	log.Info("⚙️  正在初始化套利模块...")
 	modules, err := initializeModules(client, cfg)
 	if err != nil {
-		log.Fatalf("Failed to initialize modules: %v", err)
+		log.Fatalf("❌ 模块初始化失败: %v", err)
 	}
 
-	// Start monitoring
-	log.Info("Starting pool monitoring...")
+	// 开始监控
+	log.Info("👀 正在启动池子监控...")
 	modules.poolMonitor.Start()
 
-	log.Info("🚀 Arbitrage bot is running...")
-	log.Info("   Monitoring DEX pools for arbitrage opportunities")
-	log.Info("   Press Ctrl+C to stop")
+	log.Info("🚀 套利机器人已启动！")
+	log.Info("   正在监控 DEX 池子，寻找套利机会")
+	log.Info("   按 Ctrl+C 可停止运行")
 	log.Info("")
 
 	// Main arbitrage loop
@@ -85,54 +85,54 @@ func main() {
 
 	go runArbitrageLoop(ctx, cfg, modules)
 
-	// Wait for shutdown signal
+	// 等待关闭信号
 	<-sigChan
 	cancel()
 
-	// Stop monitoring
-	log.Info("Stopping pool monitoring...")
+	// 停止监控
+	log.Info("🛑 正在停止池子监控...")
 	modules.poolMonitor.Stop()
 
-	log.Info("\n👋 Shutting down gracefully...")
-	log.Info("✅ Bot stopped successfully")
+	log.Info("\n👋 正在优雅关闭...")
+	log.Info("✅ 机器人已成功停止")
 }
 
 func verifyConnection(client *blockchain.Client, cfg *config.Config) error {
-	// Get chain ID
+	// 获取链 ID
 	chainID, err := client.GetChainID()
 	if err != nil {
-		return fmt.Errorf("failed to get chain ID: %w", err)
+		return fmt.Errorf("获取链 ID 失败: %w", err)
 	}
-	log.Infof("Connected to network with Chain ID: %s", chainID.String())
+	log.Infof("✅ 已连接到网络，链 ID: %s", chainID.String())
 
-	// Get latest block
+	// 获取最新区块
 	blockNumber, err := client.GetBlockNumber()
 	if err != nil {
-		return fmt.Errorf("failed to get block number: %w", err)
+		return fmt.Errorf("获取区块高度失败: %w", err)
 	}
-	log.Infof("Latest block number: %d", blockNumber)
+	log.Infof("📦 最新区块高度: %d", blockNumber)
 
-	// Get account balance
+	// 获取账户余额
 	balance, err := client.GetBalance(cfg.PublicAddress)
 	if err != nil {
-		return fmt.Errorf("failed to get balance: %w", err)
+		return fmt.Errorf("获取余额失败: %w", err)
 	}
 
 	ethBalance := utils.WeiToEther(balance)
-	log.Infof("Account balance: %s ETH", ethBalance.Text('f', 6))
+	log.Infof("💰 账户余额: %s ETH", ethBalance.Text('f', 6))
 
-	// Verify sufficient balance
+	// 验证余额是否充足
 	if balance.Cmp(config.BigInt0) == 0 {
-		log.Warn("⚠️  Account has zero balance!")
+		log.Warn("⚠️  账户余额为零！")
 	}
 
-	// Get gas price
+	// 获取 Gas 价格
 	gasPrice, err := client.GetGasPrice()
 	if err != nil {
-		return fmt.Errorf("failed to get gas price: %w", err)
+		return fmt.Errorf("获取 Gas 价格失败: %w", err)
 	}
 	gasPriceGwei := utils.WeiToGwei(gasPrice)
-	log.Infof("Current gas price: %d Gwei", gasPriceGwei)
+	log.Infof("⛽ 当前 Gas 价格: %d Gwei", gasPriceGwei)
 
 	return nil
 }
@@ -141,11 +141,11 @@ func printBanner() {
 	banner := `
 ╔══════════════════════════════════════════════════════════╗
 ║                                                          ║
-║         🤖  MEV ARBITRAGE BOT  🤖                        ║
+║         🤖  MEV 套利机器人  🤖                        ║
 ║                                                          ║
-║         Version: %-10s                              ║
-║         Author: ljlin                                    ║
-║         Network: Ethereum (Sepolia/Mainnet)              ║
+║         版本: %-10s                              ║
+║         作者: ljlin                                    ║
+║         网络: 以太坊 (Sepolia/主网)                  ║
 ║                                                          ║
 ╚══════════════════════════════════════════════════════════╝
 `
@@ -161,80 +161,80 @@ type BotModules struct {
 	flashbotsClient *flashbots.FlashbotsClient
 }
 
-// initializeModules initializes all bot modules
+// initializeModules 初始化所有机器人模块
 func initializeModules(client *blockchain.Client, cfg *config.Config) (*BotModules, error) {
 	modules := &BotModules{}
 
-	// Get HTTP client for contract interactions
+	// 获取 HTTP 客户端用于合约交互
 	httpClient := client.GetHTTPClient()
 
-	// Initialize DEX adapters
-	log.Info("Initializing DEX adapters...")
+	// 初始化 DEX 适配器
+	log.Info("🔌 正在初始化 DEX 适配器...")
 	uniswapAdapter, err := dex.NewUniswapV2Adapter(httpClient, cfg.UniswapV2Router)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create Uniswap adapter: %w", err)
+		return nil, fmt.Errorf("创建 Uniswap 适配器失败: %w", err)
 	}
 
-	// Initialize pool monitor
-	log.Info("Initializing pool monitor...")
+	// 初始化池子监控器
+	log.Info("📊 正在初始化池子监控器...")
 	modules.poolMonitor = dex.NewPoolMonitor(httpClient, cfg)
 	modules.poolMonitor.RegisterAdapter(uniswapAdapter)
 
-	// Add pools to monitor
+	// 添加要监控的池子
 	if err := addMonitoredPools(modules.poolMonitor, cfg); err != nil {
-		return nil, fmt.Errorf("failed to add monitored pools: %w", err)
+		return nil, fmt.Errorf("添加监控池子失败: %w", err)
 	}
 
-	// Initialize arbitrage finder
-	log.Info("Initializing arbitrage strategy...")
+	// 初始化套利查找器
+	log.Info("🎯 正在初始化套利策略...")
 	modules.arbitrageFinder = strategy.NewArbitrageFinder(
 		modules.poolMonitor,
 		cfg,
 	)
 
-	// Initialize Flashbots (if enabled)
+	// 初始化 Flashbots（如果启用）
 	if cfg.EnableFlashbots {
-		log.Info("Initializing Flashbots client...")
+		log.Info("🛡️  正在初始化 Flashbots 客户端...")
 		fbClient, err := flashbots.NewFlashbotsClient(httpClient, cfg)
 		if err != nil {
-			log.Warnf("Failed to initialize Flashbots: %v", err)
+			log.Warnf("Flashbots 初始化失败: %v", err)
 		} else {
 			modules.flashbotsClient = fbClient
-			log.Info("✅ Flashbots client initialized")
+			log.Info("✅ Flashbots 客户端初始化成功")
 		}
 	}
 
-	// Initialize executor
-	log.Info("Initializing transaction executor...")
+	// 初始化执行器
+	log.Info("⚙️  正在初始化交易执行器...")
 	modules.executor, err = executor.NewExecutor(httpClient, modules.flashbotsClient, cfg)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create executor: %w", err)
+		return nil, fmt.Errorf("创建执行器失败: %w", err)
 	}
 
-	log.Info("✅ All modules initialized successfully")
+	log.Info("✅ 所有模块初始化成功")
 	return modules, nil
 }
 
-// addMonitoredPools adds pools to the monitor
+// addMonitoredPools 添加要监控的池子
 func addMonitoredPools(monitor *dex.PoolMonitor, cfg *config.Config) error {
-	log.Info("Adding pools to monitor...")
+	log.Info("👀 正在添加监控池子...")
 
-	// Define token pairs to monitor
+	// 定义要监控的代币对
 	pairs := []struct {
 		token0  common.Address
 		token1  common.Address
 		dexType dex.DEXType
 	}{
-		// WETH/USDC pairs
+		// WETH/USDC 交易对
 		{cfg.WETHAddress, cfg.USDCAddress, dex.UniswapV2},
-		// WETH/DAI pairs
+		// WETH/DAI 交易对
 		{cfg.WETHAddress, cfg.DAIAddress, dex.UniswapV2},
-		// USDC/DAI pairs
+		// USDC/DAI 交易对
 		{cfg.USDCAddress, cfg.DAIAddress, dex.UniswapV2},
 	}
 
 	for _, pair := range pairs {
-		// Skip if addresses are zero
+		// 跳过零地址
 		if pair.token0 == (common.Address{}) || pair.token1 == (common.Address{}) {
 			continue
 		}
@@ -247,64 +247,64 @@ func addMonitoredPools(monitor *dex.PoolMonitor, cfg *config.Config) error {
 		}
 
 		// Pool already exists in monitor
-		log.Infof("✅ Monitoring %s pool: %s", pair.dexType, pool.Address.Hex()[:10]+"...")
+		log.Infof("✅ 正在监控 %s 池子: %s", pair.dexType, pool.Address.Hex()[:10]+"...")
 	}
 
 	allPools := monitor.GetAllPools()
-	log.Infof("Monitoring %d pools", len(allPools))
+	log.Infof("📊 当前监控 %d 个池子", len(allPools))
 
 	if len(allPools) == 0 {
-		return fmt.Errorf("no pools available to monitor")
+		return fmt.Errorf("没有可监控的池子")
 	}
 
 	return nil
 }
 
-// runArbitrageLoop runs the main arbitrage detection and execution loop
+// runArbitrageLoop 运行主套利检测和执行循环
 func runArbitrageLoop(ctx context.Context, cfg *config.Config, modules *BotModules) {
 	ticker := time.NewTicker(5 * time.Second)
 	defer ticker.Stop()
 
-	log.Info("Starting arbitrage detection loop...")
+	log.Info("🔄 套利检测循环已启动...")
 
 	for {
 		select {
 		case <-ctx.Done():
-			log.Info("Arbitrage loop stopped")
+			log.Info("🛑 套利循环已停止")
 			return
 
 		case <-ticker.C:
-			// Search for arbitrage opportunities
+			// 搜索套利机会
 			opportunities := searchArbitrageOpportunities(cfg, modules)
 
 			if len(opportunities) == 0 {
-				log.Debug("No profitable arbitrage opportunities found")
+				log.Debug("🔍 未找到盈利套利机会")
 				continue
 			}
 
-			// Execute best opportunity
+			// 执行最佳机会
 			best := opportunities[0]
-			log.Infof("🎯 Found opportunity! Profit: %s ETH (%.2f%%)",
+			log.Infof("🎯 发现套利机会！利润: %s ETH (%.2f%%)",
 				best.Path.ProfitETH.Text('f', 6),
 				float64(best.Path.NetProfitBps)/100)
 
 			if err := modules.executor.ExecuteArbitrage(ctx, best); err != nil {
-				log.Errorf("Failed to execute arbitrage: %v", err)
+				log.Errorf("❌ 执行套利失败: %v", err)
 			}
 		}
 	}
 }
 
-// searchArbitrageOpportunities searches for profitable arbitrage paths
+// searchArbitrageOpportunities 搜索盈利套利路径
 func searchArbitrageOpportunities(cfg *config.Config, modules *BotModules) []*strategy.ArbitrageOpportunity {
-	// Use WETH as the base token for triangle arbitrage
+	// 使用 WETH 作为三角套利的基础代币
 	if cfg.WETHAddress == (common.Address{}) {
 		return nil
 	}
 
 	paths, err := modules.arbitrageFinder.FindTriangleArbitrage(cfg.WETHAddress)
 	if err != nil {
-		log.Debugf("Arbitrage search error: %v", err)
+		log.Debugf("套利搜索错误: %v", err)
 		return nil
 	}
 
@@ -312,7 +312,7 @@ func searchArbitrageOpportunities(cfg *config.Config, modules *BotModules) []*st
 		return nil
 	}
 
-	// Convert to opportunities
+	// 转换为套利机会
 	opportunities := make([]*strategy.ArbitrageOpportunity, 0, len(paths))
 	for _, path := range paths {
 		opp := &strategy.ArbitrageOpportunity{

@@ -203,11 +203,13 @@ mev-arbitrage-bot/
 │   ├── executor/        # 交易执行器 (335行)
 │   └── utils/           # 工具函数 (161行)
 ├── contracts/            # 智能合约
+├── docker/               # Docker 配置
+│   ├── Dockerfile       # 多阶段构建
+│   ├── docker-compose.yml  # 容器编排
+│   └── README.md        # Docker 使用说明
 ├── scripts/              # 部署脚本
 │   └── deploy-docker.sh # 一键部署 (163行)
 ├── docs/                 # 完整文档 (5,000+行)
-├── Dockerfile            # Docker配置
-├── docker-compose.yml    # 容器编排
 └── .env.example          # 配置模板
 ```
 
